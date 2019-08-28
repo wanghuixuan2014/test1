@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.mapper.OrderMapper">
+	
+	<select id="findById" resultMap="orderRs" >
+	
+	select * from tb_order where order_id=#{id}
+	</select>
+	<resultMap type="Order" id="orderRs" autoMapping="true">
+	<id column="order_id" property="orderId"/>
+	
+	<!--对于一对一采用 association  --> 
+	<association property="orderShipping" javaType="OrderShipping" column="order_id"
+	 select="findOrdershippingId"></association>
+	<!--对于一对多采用 collection  --> 
+	<collection property="orderItems" ofType="OrderItem" column="order_id"
+	select="findOrderItemId"></collection>
+	</resultMap>
+	
+	<select id="findOrdershippingId" resultType="OrderShipping" >
+	select * from tb_order_shipping where order_id=#{id}
+	</select>
+	<select id="findOrderItemId" resultType="OrderItem">
+	
+	select *from tb_order_item where order_id=#{id}
+	</select>
+</mapper>
